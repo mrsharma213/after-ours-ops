@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>After Ours — Operations Tracker</title>
+<meta name="description" content="After Ours & Pigeon House Records operations dashboard">
+<meta property="og:title" content="After Ours — Operations Tracker">
+<meta property="og:description" content="After Ours & Pigeon House Records operations dashboard">
+<meta property="og:type" content="website">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="After Ours Ops">
+<meta name="theme-color" content="#000000">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --black: #000000;
+    --card: #0a0a0a;
+    --white: #ffffff;
+    --amber: #fbbf24;
+    --amber-hover: #fcd34d;
+    --amber-glow: rgba(251, 191, 36, 0.15);
+    --amber-muted: rgba(251, 191, 36, 0.1);
+    --silver: #a6a6a6;
+    --border: rgba(255, 255, 255, 0.05);
+    --border-std: rgba(255, 255, 255, 0.08);
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #fbbf24;
+    --blue: #60a5fa;
+    --frosted: rgba(255, 255, 255, 0.1);
+    --subtle: rgba(255, 255, 255, 0.02);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: var(--black);
+    color: var(--white);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+  
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1;
+  }
+  .header h1 span { color: var(--amber); }
+  .phase-badge {
+    display: inline-block;
+    background: var(--amber-muted);
+    color: var(--amber);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+  .last-updated {
+    color: var(--silver);
+    font-size: 13px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--amber);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Five Pillars */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 768px) {
+    .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .pillar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .pillar-name {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--silver);
+    margin-bottom: 12px;
+  }
+  .pillar-score {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pillar-max {
+    font-size: 13px;
+    color: var(--silver);
+    margin-bottom: 8px;
+  }
+  .pillar-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .pillar-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .pillar-notes {
+    font-size: 12px;
+    color: var(--silver);
+    line-height: 1.4;
+  }
+  .trend-up { color: var(--green); }
+  .trend-stable { color: var(--silver); }
+  .trend-down { color: var(--red); }
+
+  .total-score-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .total-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--silver);
+    white-space: nowrap;
+  }
+  .total-num {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+  .total-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .total-bar-fill {
+    height: 100%;
+    background: var(--amber);
+    border-radius: 8px;
+    transition: width 0.6s ease;
+  }
+
+  /* Cards grid */
+  .cards-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 768px) {
+    .cards-2 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Release items */
+  .release-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .release-item:last-child { border-bottom: none; }
+  .release-title { font-weight: 600; font-size: 15px; }
+  .release-date { color: var(--silver); font-size: 13px; }
+  .release-status {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .status-ready { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+  .status-in-progress { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+  .status-planned { background: rgba(96, 165, 250, 0.15); color: var(--blue); }
+
+  /* Gig items */
+  .gig-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .gig-item:last-child { border-bottom: none; }
+  .gig-date-box {
+    background: var(--frosted);
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 56px;
+  }
+  .gig-month { font-size: 10px; text-transform: uppercase; color: var(--amber); font-weight: 600; letter-spacing: 0.5px; }
+  .gig-day { font-size: 22px; font-weight: 700; letter-spacing: -1px; }
+  .gig-info { flex: 1; }
+  .gig-name { font-weight: 600; font-size: 15px; }
+  .gig-location { color: var(--silver); font-size: 13px; }
+  .gig-type {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-top: 4px;
+    display: inline-block;
+  }
+  .type-private { background: rgba(96, 165, 250, 0.15); color: var(--blue); }
+  .type-opening { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+  .type-headline { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+
+  /* Content pipeline */
+  .pipeline-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pipeline-item:last-child { border-bottom: none; }
+  .pipeline-label { font-size: 14px; font-weight: 500; }
+  .pipeline-status {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .ps-not-started { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+  .ps-in-progress { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+  .ps-done { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+
+  /* Action items */
+  .action-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .action-table th {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--silver);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-std);
+  }
+  .action-table td {
+    font-size: 14px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .action-table tr:nth-child(even) td { background: var(--subtle); }
+  .action-table .task-text { font-weight: 500; }
+  .priority-high { color: var(--red); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  .priority-medium { color: var(--amber); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  .priority-low { color: var(--silver); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  .action-status {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .as-open { background: rgba(96, 165, 250, 0.15); color: var(--blue); }
+  .as-in-progress { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+  .as-blocked { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+  .as-done { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+
+  /* Meeting info */
+  .meeting-info {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .meeting-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .meeting-stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--silver);
+  }
+  .meeting-stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  /* Hypeddit stats */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 768px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--silver);
+  }
+
+  .passcode-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  .passcode-box {
+    text-align: center;
+  }
+  .passcode-box h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .passcode-input {
+    background: var(--card);
+    border: 1px solid var(--border-std);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 18px;
+    padding: 12px 20px;
+    text-align: center;
+    width: 200px;
+    letter-spacing: 8px;
+    outline: none;
+  }
+  .passcode-input:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 1px var(--amber-glow);
+  }
+  .passcode-error {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 8px;
+    visibility: hidden;
+  }
+
+  .hidden { display: none; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0 24px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .footer-text { color: var(--silver); font-size: 13px; }
+  .footer-text a { color: var(--amber); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- Passcode -->
+<div class="passcode-overlay" id="passcodeOverlay">
+  <div class="passcode-box">
+    <h2>🎧 After Ours Ops</h2>
+    <input type="password" class="passcode-input" id="passcodeInput" maxlength="4" placeholder="····" autofocus>
+    <p class="passcode-error" id="passcodeError">Wrong code</p>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="container hidden" id="mainContent">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div>
+        <h1>🎧 After Ours <span>Ops</span></h1>
+        <div style="margin-top:8px;">
+          <span class="phase-badge" id="phaseBadge"></span>
+        </div>
+      </div>
+    </div>
+    <div class="last-updated" id="lastUpdated"></div>
+  </div>
+
+  <!-- Five Pillars -->
+  <div class="section">
+    <div class="section-title">Paul's Five Pillars</div>
+    <div class="pillars-grid" id="pillarsGrid"></div>
+    <div class="total-score-bar">
+      <div class="total-label">OVERALL</div>
+      <div class="total-num" id="totalScore"></div>
+      <div class="total-bar-wrap">
+        <div class="total-bar-fill" id="totalBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Releases + Gigs -->
+  <div class="section">
+    <div class="cards-2">
+      <div class="card">
+        <div class="card-title">💿 Release Pipeline</div>
+        <div id="releaseList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎤 Upcoming Gigs</div>
+        <div id="gigList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Pipeline + Hypeddit -->
+  <div class="section">
+    <div class="section-title">Growth Engine</div>
+    <div class="cards-2">
+      <div class="card">
+        <div class="card-title">📹 Content Pipeline</div>
+        <div id="contentPipeline"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🚀 Hypeddit</div>
+        <div id="hypedditInfo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Owned Events + Meeting -->
+  <div class="section">
+    <div class="cards-2">
+      <div class="card">
+        <div class="card-title">🎉 Owned Events</div>
+        <div id="ownedEvents"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📅 Weekly Sync</div>
+        <div class="meeting-info" id="meetingInfo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Items -->
+  <div class="section">
+    <div class="section-title">Action Items</div>
+    <div class="card" style="overflow-x:auto;">
+      <table class="action-table" id="actionTable">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Owner</th>
+            <th>Priority</th>
+            <th>Due</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="actionBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p class="footer-text">After Ours · Pigeon House Records · GM: <a href="#">Jet Damon ⚡</a></p>
+  </div>
+</div>
+
+<script>
+// Passcode
+const PASSCODE = '7586';
+const overlay = document.getElementById('passcodeOverlay');
+const main = document.getElementById('mainContent');
+const input = document.getElementById('passcodeInput');
+const error = document.getElementById('passcodeError');
+
+if (sessionStorage.getItem('ao-auth') === '1') {
+  overlay.style.display = 'none';
+  main.classList.remove('hidden');
+  loadData();
+}
+
+input.addEventListener('input', () => {
+  if (input.value.length === 4) {
+    if (input.value === PASSCODE) {
+      sessionStorage.setItem('ao-auth', '1');
+      overlay.style.display = 'none';
+      main.classList.remove('hidden');
+      loadData();
+    } else {
+      error.style.visibility = 'visible';
+      input.value = '';
+      setTimeout(() => error.style.visibility = 'hidden', 2000);
+    }
+  }
+});
+
+async function loadData() {
+  let data;
+  try {
+    const r = await fetch('tracker-data.json?t=' + Date.now());
+    data = await r.json();
+  } catch(e) {
+    console.error('Failed to load data', e);
+    return;
+  }
+
+  // Header
+  document.getElementById('phaseBadge').textContent = data.phase;
+  document.getElementById('lastUpdated').innerHTML = 'Updated: ' + new Date(data.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+  // Five Pillars
+  const grid = document.getElementById('pillarsGrid');
+  grid.innerHTML = '';
+  const p = data.fivePillars;
+  const colorScale = (score, max) => {
+    const pct = score / max;
+    if (pct >= 0.7) return 'var(--green)';
+    if (pct >= 0.5) return 'var(--amber)';
+    return 'var(--red)';
+  };
+  p.pillars.forEach(pillar => {
+    const pct = (pillar.score / pillar.maxScore) * 100;
+    const color = colorScale(pillar.score, pillar.maxScore);
+    const trendIcon = pillar.trend === 'up' ? '↑' : pillar.trend === 'down' ? '↓' : '→';
+    const trendClass = 'trend-' + pillar.trend;
+    grid.innerHTML += `
+      <div class="pillar-card">
+        <div class="pillar-name">${pillar.name}</div>
+        <div class="pillar-score" style="color:${color}">${pillar.score}</div>
+        <div class="pillar-max">/ ${pillar.maxScore} <span class="${trendClass}">${trendIcon}</span></div>
+        <div class="pillar-bar"><div class="pillar-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="pillar-notes">${pillar.notes}</div>
+      </div>`;
+  });
+  document.getElementById('totalScore').textContent = p.totalScore + ' / ' + p.totalMax;
+  document.getElementById('totalBar').style.width = ((p.totalScore / p.totalMax) * 100) + '%';
+
+  // Releases
+  const rl = document.getElementById('releaseList');
+  rl.innerHTML = '';
+  if (data.releases.length === 0) {
+    rl.innerHTML = '<p style="color:var(--silver);font-size:14px;">No releases scheduled</p>';
+  }
+  data.releases.forEach(r => {
+    const statusClass = r.status === 'ready' ? 'status-ready' : r.status === 'in-progress' ? 'status-in-progress' : 'status-planned';
+    const dateStr = new Date(r.releaseDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    rl.innerHTML += `
+      <div class="release-item">
+        <div>
+          <div class="release-title">${r.title}</div>
+          <div class="release-date">${dateStr}</div>
+        </div>
+        <span class="release-status ${statusClass}">${r.status}</span>
+      </div>`;
+  });
+
+  // Gigs
+  const gl = document.getElementById('gigList');
+  gl.innerHTML = '';
+  data.gigs.forEach(g => {
+    const d = new Date(g.date + 'T00:00:00');
+    const month = d.toLocaleDateString('en-US', { month: 'short' });
+    const day = d.getDate();
+    const typeClass = g.type === 'private' ? 'type-private' : g.type === 'headline' ? 'type-headline' : 'type-opening';
+    gl.innerHTML += `
+      <div class="gig-item">
+        <div class="gig-date-box">
+          <div class="gig-month">${month}</div>
+          <div class="gig-day">${day}</div>
+        </div>
+        <div class="gig-info">
+          <div class="gig-name">${g.event}</div>
+          <div class="gig-location">${g.location}</div>
+          <span class="gig-type ${typeClass}">${g.type}</span>
+        </div>
+      </div>`;
+  });
+
+  // Content Pipeline
+  const cp = document.getElementById('contentPipeline');
+  const items = [
+    { label: 'Monthly Live Set Filming', status: data.contentPipeline.monthlySet.status },
+    { label: 'Social Clips (this week)', status: data.contentPipeline.socialClips.thisWeek > 0 ? 'done' : 'not-started' },
+    { label: 'Vlog / BTS Content', status: data.contentPipeline.vlogContent.status }
+  ];
+  cp.innerHTML = '';
+  items.forEach(i => {
+    const sc = i.status === 'not-started' ? 'ps-not-started' : i.status === 'in-progress' ? 'ps-in-progress' : 'ps-done';
+    const label = i.status === 'not-started' ? 'Not Started' : i.status === 'in-progress' ? 'In Progress' : 'Done';
+    cp.innerHTML += `
+      <div class="pipeline-item">
+        <span class="pipeline-label">${i.label}</span>
+        <span class="pipeline-status ${sc}">${label}</span>
+      </div>`;
+  });
+
+  // Hypeddit
+  const hd = document.getElementById('hypedditInfo');
+  const h = data.hypeddit;
+  hd.innerHTML = `
+    <div class="pipeline-item">
+      <span class="pipeline-label">Account Setup</span>
+      <span class="pipeline-status ${h.accountSetup ? 'ps-done' : 'ps-not-started'}">${h.accountSetup ? 'Done' : 'Not Started'}</span>
+    </div>
+    <div class="pipeline-item">
+      <span class="pipeline-label">Active Campaigns</span>
+      <span style="font-weight:600;font-size:18px;letter-spacing:-0.5px;">${h.activeCampaigns}</span>
+    </div>
+    <div class="pipeline-item">
+      <span class="pipeline-label">Total Downloads</span>
+      <span style="font-weight:600;font-size:18px;letter-spacing:-0.5px;">${h.totalDownloads}</span>
+    </div>
+    <div class="pipeline-item">
+      <span class="pipeline-label">Spotify Followers Gained</span>
+      <span style="font-weight:600;font-size:18px;letter-spacing:-0.5px;">+${h.spotifyFollowersGained}</span>
+    </div>`;
+
+  // Owned Events
+  const oe = document.getElementById('ownedEvents');
+  const ev = data.ownedEvents;
+  oe.innerHTML = `
+    <div class="pipeline-item">
+      <span class="pipeline-label">Status</span>
+      <span class="pipeline-status ps-in-progress">${ev.status}</span>
+    </div>
+    <div class="pipeline-item">
+      <span class="pipeline-label">Next Event</span>
+      <span style="font-size:14px;color:var(--silver);">${ev.next || 'TBD'}</span>
+    </div>
+    <div class="pipeline-item">
+      <span class="pipeline-label">Venues Scouted</span>
+      <span style="font-size:14px;color:var(--silver);">${ev.venuesScouted.length || 0}</span>
+    </div>
+    <p style="font-size:13px;color:var(--silver);margin-top:8px;">${ev.notes}</p>`;
+
+  // Meeting
+  const mi = document.getElementById('meetingInfo');
+  const m = data.weeklyMeetings;
+  const nextDate = new Date(m.nextMeeting + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  mi.innerHTML = `
+    <div class="meeting-stat">
+      <span class="meeting-stat-label">Cadence</span>
+      <span class="meeting-stat-value">${m.cadence}</span>
+    </div>
+    <div class="meeting-stat">
+      <span class="meeting-stat-label">Next Meeting</span>
+      <span class="meeting-stat-value" style="color:var(--amber)">${nextDate}</span>
+    </div>
+    <div class="meeting-stat">
+      <span class="meeting-stat-label">Participants</span>
+      <span class="meeting-stat-value">${m.participants.length}</span>
+    </div>`;
+
+  // Action Items
+  const ab = document.getElementById('actionBody');
+  ab.innerHTML = '';
+  const sorted = [...data.actionItems].sort((a, b) => {
+    const pOrder = { high: 0, medium: 1, low: 2 };
+    return (pOrder[a.priority] || 2) - (pOrder[b.priority] || 2);
+  });
+  sorted.forEach(a => {
+    const pClass = 'priority-' + a.priority;
+    const sClass = a.status === 'open' ? 'as-open' : a.status === 'in-progress' ? 'as-in-progress' : a.status === 'blocked' ? 'as-blocked' : 'as-done';
+    const due = a.dueDate ? new Date(a.dueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—';
+    ab.innerHTML += `
+      <tr>
+        <td class="task-text">${a.task}</td>
+        <td style="color:var(--silver)">${a.owner}</td>
+        <td><span class="${pClass}">${a.priority}</span></td>
+        <td style="color:var(--silver);white-space:nowrap">${due}</td>
+        <td><span class="action-status ${sClass}">${a.status}</span></td>
+      </tr>`;
+  });
+}
+</script>
+</body>
+</html>

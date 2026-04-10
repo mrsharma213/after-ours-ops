@@ -1,0 +1,143 @@
+{
+  "lastUpdated": "2026-04-09T22:40:00-04:00",
+  "weekOf": "2026-04-07",
+  "phase": "Discovery / Sound Definition",
+  "phaseDescription": "Nearing end of discovery. Locking in indie house direction. Bridging live set energy → recorded music.",
+
+  "fivePillars": {
+    "weekOf": "2026-04-07",
+    "pillars": [
+      {
+        "name": "Music You Make",
+        "score": 5,
+        "maxScore": 10,
+        "notes": "Recorded music behind live energy. New songs trending indie direction but gap remains.",
+        "trend": "up"
+      },
+      {
+        "name": "Sets You Play",
+        "score": 7,
+        "maxScore": 10,
+        "notes": "Strong. Paul impressed at Miami. Minor mixing transitions to polish.",
+        "trend": "stable"
+      },
+      {
+        "name": "Who You Associate With",
+        "score": 5,
+        "maxScore": 10,
+        "notes": "Playing shows, building relationships. Need more strategic associations in the indie lane.",
+        "trend": "up"
+      },
+      {
+        "name": "Look / Feel / Brand",
+        "score": 4,
+        "maxScore": 10,
+        "notes": "Needs realignment with indie direction once sound is locked.",
+        "trend": "stable"
+      },
+      {
+        "name": "Social Media Voice",
+        "score": 4,
+        "maxScore": 10,
+        "notes": "Content gaps. No consistent pipeline. Brandon needs clearer direction.",
+        "trend": "stable"
+      }
+    ],
+    "totalScore": 25,
+    "totalMax": 50,
+    "history": [
+      { "weekOf": "2026-04-07", "score": 25 }
+    ]
+  },
+
+  "releases": [
+    {
+      "title": "Future Classic",
+      "status": "ready",
+      "releaseDate": "2026-04-17",
+      "notes": "Next release. Pre-save campaign needed.",
+      "hypedditLink": null
+    }
+  ],
+
+  "gigs": [
+    {
+      "date": "2026-04-17",
+      "event": "Y Combinator Magazine Launch",
+      "location": "San Francisco",
+      "type": "private",
+      "notes": "Private DJ set for YC launch party"
+    },
+    {
+      "date": "2026-04-18",
+      "event": "Somewhere Nowhere",
+      "location": "NYC",
+      "type": "opening",
+      "notes": "Opening for Moojo. Fly SFO→NYC morning of."
+    }
+  ],
+
+  "pastGigs": [
+    { "date": "2026-03-25", "event": "Miami Yacht Party", "location": "Miami" },
+    { "date": "2026-03-27", "event": "One K", "location": "Miami" },
+    { "date": "2026-04-02", "event": "Colombia Show 1", "location": "Colombia" },
+    { "date": "2026-04-04", "event": "Colombia Show 2", "location": "Colombia" }
+  ],
+
+  "contentPipeline": {
+    "monthlySet": {
+      "status": "not-started",
+      "target": "1 filmed set per month in cool location",
+      "lastFilmed": null,
+      "nextPlanned": null
+    },
+    "socialClips": {
+      "target": "10-20 clips per set",
+      "thisWeek": 0
+    },
+    "vlogContent": {
+      "status": "not-started",
+      "notes": "Setup process, track selection, behind-the-scenes"
+    }
+  },
+
+  "ownedEvents": {
+    "status": "planning",
+    "next": null,
+    "venuesScouted": [],
+    "notes": "Target rooftops, scenic spots. Basel party also in planning."
+  },
+
+  "hypeddit": {
+    "accountSetup": false,
+    "activeCampaigns": 0,
+    "totalDownloads": 0,
+    "spotifyFollowersGained": 0,
+    "notes": "Need to set up account and first download gate"
+  },
+
+  "actionItems": [
+    { "id": 1, "task": "Bridge recorded music → live set energy (indie house)", "owner": "Nik + Minul", "status": "in-progress", "priority": "high", "dueDate": null },
+    { "id": 2, "task": "Get full release calendar from Minul", "owner": "Jet", "status": "open", "priority": "high", "dueDate": "2026-04-14" },
+    { "id": 3, "task": "Get distribution status from Minul", "owner": "Jet", "status": "open", "priority": "high", "dueDate": "2026-04-14" },
+    { "id": 4, "task": "Share SoundCloud/catalog link with Paul", "owner": "Nik", "status": "open", "priority": "medium", "dueDate": "2026-04-14" },
+    { "id": 5, "task": "Content pipeline — no more gaps", "owner": "Brandon", "status": "open", "priority": "high", "dueDate": null },
+    { "id": 6, "task": "Brand/design alignment with indie direction", "owner": "Team", "status": "blocked", "priority": "medium", "dueDate": null },
+    { "id": 7, "task": "Basel party planning", "owner": "Team", "status": "open", "priority": "medium", "dueDate": null },
+    { "id": 8, "task": "Flappy Pigeon marketing plan for Paul", "owner": "Troy + Nik", "status": "open", "priority": "medium", "dueDate": null },
+    { "id": 9, "task": "Set up Hypeddit account + first download gate", "owner": "Jet", "status": "open", "priority": "high", "dueDate": "2026-04-21" },
+    { "id": 10, "task": "Scout rooftop/cool venues for owned parties (NYC)", "owner": "Jet", "status": "open", "priority": "medium", "dueDate": "2026-04-25" },
+    { "id": 11, "task": "Plan first owned After Ours party", "owner": "Team", "status": "open", "priority": "medium", "dueDate": null },
+    { "id": 12, "task": "Monthly live set filming — scout first location", "owner": "Jet + Brandon", "status": "open", "priority": "high", "dueDate": "2026-04-25" },
+    { "id": 13, "task": "Connect Jet with Minul + Rameez on Telegram", "owner": "Nik", "status": "open", "priority": "high", "dueDate": "2026-04-10" },
+    { "id": 14, "task": "Future Classic pre-save campaign", "owner": "Jet", "status": "open", "priority": "high", "dueDate": "2026-04-14" }
+  ],
+
+  "weeklyMeetings": {
+    "cadence": "Weekly (Monday/Tuesday)",
+    "participants": ["Nik", "Minul", "Troy", "Paul", "Tristin", "Brandon", "Rameez"],
+    "lastMeeting": "2026-04-07",
+    "nextMeeting": "2026-04-14",
+    "notes": "Jet (GM) now running ops side of these calls"
+  }
+}
